@@ -35,14 +35,17 @@ class GlobalMethodHandler implements MethodChannel.MethodCallHandler, FlutterPlu
     
     private MethodChannel channel;
 
-    @Override
-    public void onAttachedToEngine(@NonNull FlutterPlugin.FlutterPluginBinding binding) {
+     GlobalMethodHandler(@NonNull FlutterPlugin.FlutterPluginBinding binding) {
         this.context = binding.getApplicationContext();
         this.flutterAssets = binding.getFlutterAssets();
         this.messenger = binding.getBinaryMessenger();
-        
-        channel = new MethodChannel(binding.getBinaryMessenger(), "maplibre_gl");
-        channel.setMethodCallHandler(this);
+        this.channel = new MethodChannel(binding.getBinaryMessenger(), "maplibre_gl");
+        this.channel.setMethodCallHandler(this);
+    }
+
+    @Override
+    public void onAttachedToEngine(@NonNull FlutterPlugin.FlutterPluginBinding binding) {
+        new GlobalMethodHandler(binding);
     }
 
     @Override
@@ -52,7 +55,7 @@ class GlobalMethodHandler implements MethodChannel.MethodCallHandler, FlutterPlu
         messenger = null;
         flutterAssets = null;
     }
-
+    
     private static void copy(InputStream input, OutputStream output) throws IOException {
         final byte[] buffer = new byte[BUFFER_SIZE];
         final BufferedInputStream in = new BufferedInputStream(input, BUFFER_SIZE);
