@@ -47,8 +47,7 @@ class LayerState extends State {
               dragEnabled: false,
               myLocationEnabled: true,
               onMapCreated: _onMapCreated,
-              onMapClick: (point, latLong) =>
-                  debugPrint(point.toString() + latLong.toString()),
+              onMapClick: (point, latLong) => debugPrint(point.toString() + latLong.toString()),
               onStyleLoadedCallback: _onStyleLoadedCallback,
               initialCameraPosition: const CameraPosition(
                 target: center,
@@ -61,9 +60,7 @@ class LayerState extends State {
         onPressed: () {
           controller
               .setLayerProperties(
-                  "lines",
-                  LineLayerProperties.fromJson(
-                      {"visibility": linesVisible ? "none" : "visible"}))
+                  "lines", LineLayerProperties.fromJson({"visibility": linesVisible ? "none" : "visible"}))
               .then((value) => setState(() => linesVisible = !linesVisible));
         },
         child: const Text('toggle line visibility'),
@@ -72,9 +69,7 @@ class LayerState extends State {
         onPressed: () {
           controller
               .setLayerProperties(
-                  "lines",
-                  LineLayerProperties.fromJson(
-                      {"line-color": linesRed ? "#0000ff" : "#ff0000"}))
+                  "lines", LineLayerProperties.fromJson({"line-color": linesRed ? "#0000ff" : "#ff0000"}))
               .then((value) => setState(() => linesRed = !linesRed));
         },
         child: const Text('toggle line color'),
@@ -83,9 +78,7 @@ class LayerState extends State {
         onPressed: () {
           controller
               .setLayerProperties(
-                  "fills",
-                  FillLayerProperties.fromJson(
-                      {"visibility": fillsVisible ? "none" : "visible"}))
+                  "fills", FillLayerProperties.fromJson({"visibility": fillsVisible ? "none" : "visible"}))
               .then((value) => setState(() => fillsVisible = !fillsVisible));
         },
         child: const Text('toggle fill visibility'),
@@ -94,9 +87,7 @@ class LayerState extends State {
         onPressed: () {
           controller
               .setLayerProperties(
-                  "fills",
-                  FillLayerProperties.fromJson(
-                      {"fill-color": fillsRed ? "#0000ff" : "#ff0000"}))
+                  "fills", FillLayerProperties.fromJson({"fill-color": fillsRed ? "#0000ff" : "#ff0000"}))
               .then((value) => setState(() => fillsRed = !fillsRed));
         },
         child: const Text('toggle fill color'),
@@ -105,11 +96,8 @@ class LayerState extends State {
         onPressed: () {
           controller
               .setLayerProperties(
-                  "circles",
-                  CircleLayerProperties.fromJson(
-                      {"visibility": circlesVisible ? "none" : "visible"}))
-              .then(
-                  (value) => setState(() => circlesVisible = !circlesVisible));
+                  "circles", CircleLayerProperties.fromJson({"visibility": circlesVisible ? "none" : "visible"}))
+              .then((value) => setState(() => circlesVisible = !circlesVisible));
         },
         child: const Text('toggle circle visibility'),
       ),
@@ -117,9 +105,7 @@ class LayerState extends State {
         onPressed: () {
           controller
               .setLayerProperties(
-                  "circles",
-                  CircleLayerProperties.fromJson(
-                      {"circle-color": circlesRed ? "#0000ff" : "#ff0000"}))
+                  "circles", CircleLayerProperties.fromJson({"circle-color": circlesRed ? "#0000ff" : "#ff0000"}))
               .then((value) => setState(() => circlesRed = !circlesRed));
         },
         child: const Text('toggle circle color'),
@@ -128,11 +114,8 @@ class LayerState extends State {
         onPressed: () {
           controller
               .setLayerProperties(
-                  "symbols",
-                  SymbolLayerProperties.fromJson(
-                      {"visibility": symbolsVisible ? "none" : "visible"}))
-              .then(
-                  (value) => setState(() => symbolsVisible = !symbolsVisible));
+                  "symbols", SymbolLayerProperties.fromJson({"visibility": symbolsVisible ? "none" : "visible"}))
+              .then((value) => setState(() => symbolsVisible = !symbolsVisible));
         },
         child: const Text('toggle (non-moving) symbols visibility'),
       ),
@@ -142,11 +125,10 @@ class LayerState extends State {
   void _onMapCreated(MapLibreMapController controller) {
     this.controller = controller;
 
-    controller.onFeatureTapped.add(onFeatureTap);
+    controller.onFeatureTapped.add(onFeatureTap as OnFeatureInteractionCallback);
   }
 
-  void onFeatureTap(
-      dynamic featureId, Point<double> point, LatLng latLng, String layerId) {
+  void onFeatureTap(dynamic featureId, Point<double> point, LatLng latLng, String layerId) {
     final snackBar = SnackBar(
       content: Text(
         'Tapped feature with id $featureId on layer $layerId',
@@ -159,8 +141,7 @@ class LayerState extends State {
   }
 
   Future<void> _onStyleLoadedCallback() async {
-    await addImageFromAsset(
-        controller, "custom-marker", "assets/symbols/custom-marker.png");
+    await addImageFromAsset(controller, "custom-marker", "assets/symbols/custom-marker.png");
     await controller.addGeoJsonSource("points", _points);
     await controller.addGeoJsonSource("moving", _movingFeature(0));
 
@@ -204,17 +185,15 @@ class LayerState extends State {
     await controller.addLineLayer(
       "fills",
       "lines",
-      LineLayerProperties(
-          lineColor: Colors.lightBlue.toHexStringRGB(),
-          lineWidth: [
-            Expressions.interpolate,
-            ["linear"],
-            [Expressions.zoom],
-            11.0,
-            2.0,
-            20.0,
-            10.0
-          ]),
+      LineLayerProperties(lineColor: Colors.lightBlue.toHexStringRGB(), lineWidth: [
+        Expressions.interpolate,
+        ["linear"],
+        [Expressions.zoom],
+        11.0,
+        2.0,
+        20.0,
+        10.0
+      ]),
     );
 
     await controller.addCircleLayer(
